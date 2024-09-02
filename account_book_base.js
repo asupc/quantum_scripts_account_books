@@ -5,7 +5,7 @@ const {
      addCustomData
 } = require('./quantum');
 
-const moment = require("monent")
+const moment = require("moment")
 
 /**
  * 添加流水
