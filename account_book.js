@@ -1,6 +1,8 @@
 ﻿/**
  * 量子记账
  * 
+ * 区分支出和必要支出，有利于后期做数据统计分析
+ * 
  */
 
 const {
@@ -31,7 +33,7 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
     let commands = extractInfo(command)
 
     if (commands.length < 3) {
-        await sendNotify("格式错误，参考如下：\r支出地铁9\r收入工资1000");
+        await sendNotify("格式错误，参考如下：\r必要支出地铁9\r支出饮料9\r收入工资1000\r区分支出和必要支出，有利于后期做数据统计分析");
         return;
     }
     await addFlows(commands[0].indexOf("支出") > -1 ? "支出" : "收入", commands[1], commands[2], commands[3], (commands[0].indexOf("支出") > -1 && commands[0].indexOf("必要") > -1) ? "是" : "否")
