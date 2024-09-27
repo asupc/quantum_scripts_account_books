@@ -50,9 +50,9 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
         // const t = dd.reduce((accumulator, current) => {
         //     return accumulator + parseFloat(current.Data2); 
         // }, 0).toFixed(2);
-        msg+=`\r\n今日支出：${await getDayStatistics("支出")}`
-        msg+=`\r\n本周支出：${await getWeekStatistics("支出")}`
-        msg+=`\r\n本月支出：${await getMonthStatistics("支出")}`
+        msg+=`\r\n今日支出：${await getDayStatistics("支出")}元`
+        msg+=`\r\n本周支出：${await getWeekStatistics("支出")}元`
+        msg+=`\r\n本月支出：${await getMonthStatistics("支出")}元`
     }
 
     await sendNotify(msg)
