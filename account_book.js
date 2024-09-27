@@ -11,9 +11,12 @@ const {
 
 
 const {
-    addFlows
+    addFlows,
+    getFlows
 } = require('./account_book_base');
 
+
+const moment = require("moment")
 
 let command = process.env.command;
 let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.QuantumAssistantTemporaryToken.length > 0;
@@ -22,9 +25,9 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
 !(async () => {
     if (!isQuantum) {
     } else {
-        if (process.env.user_id != '51a2685836c745c198193e902ff2e7c4' && process.env.user_id != 'c512959ec0e14a4ea1c830c88c99fa03') {
-            return;
-        }
+        // if (process.env.user_id != '51a2685836c745c198193e902ff2e7c4' && process.env.user_id != 'c512959ec0e14a4ea1c830c88c99fa03') {
+        //     return;
+        // }
     }
     if (!command) {
         return;
@@ -37,7 +40,18 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
         return;
     }
     await addFlows(commands[0].indexOf("支出") > -1 ? "支出" : "收入", commands[1], commands[2], commands[3], (commands[0].indexOf("支出") > -1 && commands[0].indexOf("必要") > -1) ? "是" : "否")
-    await sendNotify(command + "，记账完成")
+
+    let msg = command + "，记账完成";
+
+    if (commands[0].indexOf("支出") > -1) {
+        const dd = await getFlows(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD 23:59:59"), "支出")
+        const t = dd.reduce((accumulator, current) => {
+            return accumulator + parseFloat(current.Data2); 
+        }, 0).toFixed(2);
+        msg+=`\r\n今日支出：[${t}]`
+    }
+
+    await sendNotify(msg)
 })().catch((e) => {
     console.log("脚本异常：" + e.message);
     console.log(e.stack)

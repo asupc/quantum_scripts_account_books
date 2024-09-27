@@ -74,7 +74,7 @@ async function getWeekStatistics(type, tag, isNecessity) {
     const flows = await getFlows(startTime, endTime, type, tag, isNecessity)
 
     return flows.reduce((accumulator, current) => {
-        return accumulator + current.Data2; // 累加 Data1 的值
+        return accumulator + parseFloat(current.Data2); // 累加 Data1 的值
     }, 0);
 }
 
@@ -89,7 +89,7 @@ async function getMonthStatistics(type, tag, isNecessity) {
     const endTime = moment().format("YYYY-MM-DD HH:mm:ss")
     const flows = await getFlows(startTime, endTime, type, tag, isNecessity)
     return flows.reduce((accumulator, current) => {
-        return accumulator + current.Data2; // 累加 Data1 的值
+        return accumulator +  parseFloat(current.Data2); // 累加 Data1 的值
     }, 0);
 }
 
