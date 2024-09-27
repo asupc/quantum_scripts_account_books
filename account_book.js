@@ -12,7 +12,9 @@ const {
 
 const {
     addFlows,
-    getFlows
+    getDayStatistics,
+    getWeekStatistics,
+    getMonthStatistics
 } = require('./account_book_base');
 
 
@@ -44,11 +46,13 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
     let msg = command + "，记账完成";
 
     if (commands[0].indexOf("支出") > -1) {
-        const dd = await getFlows(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD 23:59:59"), "支出")
-        const t = dd.reduce((accumulator, current) => {
-            return accumulator + parseFloat(current.Data2); 
-        }, 0).toFixed(2);
-        msg+=`\r\n今日支出：[${t}]`
+        // const dd = await getFlows(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD 23:59:59"), "支出")
+        // const t = dd.reduce((accumulator, current) => {
+        //     return accumulator + parseFloat(current.Data2); 
+        // }, 0).toFixed(2);
+        msg+=`\r\n今日支出：${await getDayStatistics("支出")}`
+        msg+=`\r\n本周支出：${await getWeekStatistics("支出")}`
+        msg+=`\r\n本月支出：${await getMonthStatistics("支出")}`
     }
 
     await sendNotify(msg)
