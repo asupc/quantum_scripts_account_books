@@ -6,7 +6,7 @@
  */
 
 const {
-    sendNotify
+    sendNotify, sleep
 } = require('./quantum');
 
 
@@ -42,17 +42,12 @@ let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.Quantu
         return;
     }
     await addFlows(commands[0].indexOf("支出") > -1 ? "支出" : "收入", commands[1], commands[2], commands[3], (commands[0].indexOf("支出") > -1 && commands[0].indexOf("必要") > -1) ? "是" : "否")
-
+    await sleep(500)
     let msg = command + "，记账完成";
-
     if (commands[0].indexOf("支出") > -1) {
-        // const dd = await getFlows(moment().format("YYYY-MM-DD"), moment().format("YYYY-MM-DD 23:59:59"), "支出")
-        // const t = dd.reduce((accumulator, current) => {
-        //     return accumulator + parseFloat(current.Data2); 
-        // }, 0).toFixed(2);
-        msg+=`\r\n今日支出：${await getDayStatistics("支出")}元`
-        msg+=`\r\n本周支出：${await getWeekStatistics("支出")}元`
-        msg+=`\r\n本月支出：${await getMonthStatistics("支出")}元`
+        msg += `\r\n今日支出：${await getDayStatistics("支出")}元`
+        msg += `\r\n本周支出：${await getWeekStatistics("支出")}元`
+        msg += `\r\n本月支出：${await getMonthStatistics("支出")}元`
     }
 
     await sendNotify(msg)
