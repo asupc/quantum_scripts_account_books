@@ -11,7 +11,7 @@ const moment = require("moment")
 
 let customerDataType = "account_book_statistics_month"
 !(async () => {
-    let d = moment(moment().add(-9, "months").format("YYYY-MM-01"))
+    let d = moment(moment().add(-3, "months").format("YYYY-MM-01"))
     let max = moment();
     for (d; d < max;) {
         let month_str = d.format("YYYY年MM月")

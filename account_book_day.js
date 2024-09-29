@@ -11,7 +11,10 @@ const moment = require("moment")
 
 let customerDataType = "account_book_statistics_day"
 !(async () => {
-    let d = moment(moment().add(-280, "days").format("YYYY-MM-DD"))
+    /**
+     * 下面的-15 表示将重新计算近15天的日统计 并更行
+     */
+    let d = moment(moment().add(-15, "days").format("YYYY-MM-DD"))
     let max = moment();
     for (d; d < max;) {
         let date = d.format("YYYY-MM-DD")
