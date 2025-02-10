@@ -17,9 +17,6 @@ const {
     getMonthStatistics
 } = require('./account_book_base');
 
-
-const moment = require("moment")
-
 let command = process.env.command;
 let isQuantum = process.env.QuantumAssistantTemporaryToken && process.env.QuantumAssistantTemporaryToken.length > 0;
 

@@ -2,7 +2,8 @@
 
 const {
     addCustomData,
-    getCustomData
+    getCustomData,
+    updateCustomData
 } = require('./quantum');
 
 const moment = require("moment")
@@ -24,6 +25,15 @@ async function addFlows(type, tag, amount, remark, isNecessity) {
         Data4: isNecessity,
         Data5: moment().format("YYYY-MM-DD HH:mm:ss"),
         Data6: remark
+    }
+
+    const ACCOUNT_BALANCE_TYPE = 'account_balance';
+
+    let balanceDatas = await getCustomData(ACCOUNT_BALANCE_TYPE, null, null, { Data1: "记账账户-Template123" });
+    // console.log("balanceDatas", balanceDatas)
+    if (balanceDatas.length > 0) {
+        balanceDatas[0].Data2 = parseFloat(balanceDatas[0].Data2) + (type == '支出' ? -1 : 1) * parseFloat(amount);
+        await updateCustomData(balanceDatas[0]);
     }
     return (await addCustomData([data]))[0];
 }
@@ -89,7 +99,7 @@ async function getMonthStatistics(type, tag, isNecessity) {
     const endTime = moment().format("YYYY-MM-DD HH:mm:ss")
     const flows = await getFlows(startTime, endTime, type, tag, isNecessity)
     return flows.reduce((accumulator, current) => {
-        return accumulator +  parseFloat(current.Data2); // 累加 Data1 的值
+        return accumulator + parseFloat(current.Data2); // 累加 Data1 的值
     }, 0).toFixed(2);
 }
 
