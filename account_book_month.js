@@ -2,6 +2,10 @@
  * 
  * 量子变量：script_account_book_statistics_month_number，从多少月前的数据重新统计，数字，不指定时默认6，即近6个月的月记账数据会被重新统计
  * 
+ * 默认可以每个月执行一次，如果是系统定时执行则提示上个月的支出统计
+ * 
+ * 可以通过设置触发执行，统计当月的支出数据，通知当月支出数据
+ * 
  */
 const {
     sendNotify, addCustomData, getCustomData, sleep, updateCustomData
@@ -21,12 +25,19 @@ let customerDataType = "account_book_statistics_month"
 let monthNumber = 6;
 
 
+
+
 !(async () => {
 
 
+    let isCurrentMonth = process.env.command != null;
     try {
         monthNumber = process.env.script_account_book_statistics_month_number ? parseInt(process.env.script_account_book_statistics_month_number) : monthNumber
     } catch {
+    }
+
+    if (isCurrentMonth) {
+        d = 0;
     }
 
     let d = moment(moment().add(-monthNumber, "months").format("YYYY-MM-01"))
@@ -92,13 +103,13 @@ let monthNumber = 6;
 
         for (let k in tagStatistics) {
             tsl.push({
-                t:k,
-                v:tagStatistics[k].toFixed(2)
+                t: k,
+                v: tagStatistics[k].toFixed(2)
             })
         }
 
         tsl.sort((a, b) => b.v - a.v);
-        if (month_str == moment().add(-1, "months").format("YYYY年MM月")) {
+        if (isCurrentMonth || month_str == moment().add(-1, "months").format("YYYY年MM月")) {
             let msg = `${month_str}记账统计通知`
             if (shouru > 0) {
                 msg += `\r总收入：${shouru}元`
@@ -106,11 +117,11 @@ let monthNumber = 6;
             if (zhichu > 0) {
                 msg += `\r总支出：${zhichu}元`
             }
-            msg+=`\r结余：${((shouru - zhichu).toFixed(2))}元`
+            msg += `\r结余：${((shouru - zhichu).toFixed(2))}元`
             if (zhichuList.length > 0) {
                 msg += `\r支出标签统计`
-                tsl.forEach((item)=>{
-                     msg += `\r${item.t}：${item.v}元`
+                tsl.forEach((item) => {
+                    msg += `\r${item.t}：${item.v}元`
                 })
             }
             await sendNotify(msg, true)
