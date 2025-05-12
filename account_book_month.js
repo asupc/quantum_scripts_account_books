@@ -37,7 +37,7 @@ let monthNumber = 6;
     }
 
     if (isCurrentMonth) {
-        d = 0;
+        monthNumber = 0;
     }
 
     let d = moment(moment().add(-monthNumber, "months").format("YYYY-MM-01"))
